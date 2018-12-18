@@ -1,42 +1,56 @@
 #!/usr/bin/env python
 import rospy
-from std_msgs.msg import String
-from geometry_msgs.msg import Twist, Pose
-from nav_msgs.msg import Odometry
+from geometry_msgs.msg import Twist, Pose2D, Vector3
 
 import math
 
-msg = Pose()
+pub = rospy.Publisher('mux_vel_nav/cmd_vel', Twist, queue_size=10)
 
 def callback(data):
-#    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
-    msg=data
+    rospy.loginfo(rospy.get_caller_id() + "Dobra jedziem. Pozycja docelowa (%f, %f)", data.x, data.y)
 
-def ruch_do_pozycji():
-    rospy.init_node('zadane_polozenie', anonymous=True)
+    frequency = 20
+    rate = rospy.Rate(frequency) # 50hz
+    twist = Twist(Vector3(0, 0, 0), Vector3(0, 0, 0))
+    kat = math.atan2(data.y, data.x)
 
-#    rospy.Subscriber("/elektron/mobile_base_controller/odom", Odometry, callback)
-    rospy.Subscriber("new_pose", Pose, callback)
 
-    pub = rospy.Publisher('mux_vel_nav/cmd_vel', Twist, queue_size=10)
-    rate = rospy.Rate(1) # 1hz
-    twist = Twist()
-    twist.linear.x = 0.2
-    kat = math.atan2(msg.position.y, msg.position.x)
-	twist.angular.z = kat
-    while not rospy.is_shutdown():
-        for i in range(10): 
-            pub.publish(twist)
-            rate.sleep()
-        twist.linear.x = 0.2
+    constSpeed = 0.3
 
-    # ?????????????????????
-    # spin() simply keeps python from exiting until this node is stopped
-    rospy.spin()
+    twist.angular.z = constSpeed
+    totalRotation = kat
+    rotationTime = math.fabs(totalRotation/constSpeed) # Number of required seconds for travel
+    iterationsTillRotated = int(rotationTime*frequency)
+    if(iterationsTillRotated == 0):
+        iterationsTillRotated = 1
+
+    totalDistance = math.sqrt(pow(data.x, 2) + pow(data.y, 2))
+    travelTime = totalDistance/constSpeed # Number of required seconds for travel
+    iterationsTillGoal = int(travelTime*frequency)
+    totalIterations = iterationsTillGoal + iterationsTillRotated
+    print iterationsTillRotated, iterationsTillGoal, totalIterations
+    for i in range(totalIterations):
+        if i == iterationsTillRotated -1:
+            twist.angular.z = 0.0
+            twist.linear.x = constSpeed  # 0.1m/s
+        pub.publish(twist)
+        rate.sleep()
+    twist.linear.x = 0.0
+    pub.publish(twist)
+    rate.sleep()
+
+
+rospy.init_node('zadane_polozenie', anonymous=True)
+rospy.Subscriber("new_pose", Pose2D, callback)
+
+
+
     
 
 if __name__ == '__main__':
     try:
-        ruch_do_pozycji()
+        while not rospy.is_shutdown():
+            rospy.loginfo(rospy.get_caller_id() + "Dawaj pozycje bo czekam")
+            rospy.spin()
     except rospy.ROSInterruptException:
         pass

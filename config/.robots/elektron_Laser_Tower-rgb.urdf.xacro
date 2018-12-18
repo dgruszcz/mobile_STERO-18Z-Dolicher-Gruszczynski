@@ -10,7 +10,7 @@
 	<property name="base_size_x" value="0.38" />
 	<property name="base_size_y" value="0.28" />
 	<property name="base_size_z" value="0.18" />
-	<property name="wheel_radius" value="0.045" />
+	<property name="wheel_radius" value="0.05" />
 	<property name="wheel_length" value="0.02" />
 	<property name="caster_wheel_offset_y" value="0.1675" />
 	<!-- INCLUDE SICK LMX100 LASER -->
@@ -169,3 +169,4 @@
 </plugin>
 </gazebo>
 </robot>
+
