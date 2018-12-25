@@ -13,7 +13,7 @@ def getRotZ(q):
     yaw = math.atan2(siny_cosp, cosy_cosp)
     return yaw
 
-def callback(data):
+def moveToGoal(data, moveSpeed=0.3, frequency=20):
     print "Dobra jedziem. Pozycja docelowa: ", data.x, data.y
 
     # Wybor kierunku obrotu
@@ -21,14 +21,13 @@ def callback(data):
         rotSpeed = 0.3
     else:
         rotSpeed = -0.3
-
     # Predkosc ruchu
     moveSpeed = 0.3
 
     # Przeliczanie pozycji zadanej do ukladu wspolrzednych robota (zakladamy ze robot znajduje sie w pozycji (0,0,0)
     goal = Pose2D()
     katRobota = getRotZ(currentPosition.orientation)
-    goal.x = data.x*math.cos(katRobota) - data.y*math.sin(katRobota) + currentPosition.position.x
+    goal.x = data.x * math.cos(katRobota) - data.y * math.sin(katRobota) + currentPosition.position.x
     goal.y = data.x * math.sin(katRobota) + data.y * math.cos(katRobota) + currentPosition.position.y
 
     # Obliczanie kata do jakiego musi sie ustawic robot
@@ -44,21 +43,22 @@ def callback(data):
 
         # Pobieranie aktualnego obrotu robota i spradzenie czy osiagnal on zadany obrot (z zadana tolerancja)
         katRobota = getRotZ(currentPosition.orientation)
-        if math.fabs(kat - katRobota) < 0.05:
+        if math.fabs(kat - katRobota) < 0.03:
             break
         pub.publish(twist)
         rate.sleep()
     twist.angular.z = 0.0
+    rospy.sleep(1)
 
     # Sprawdzenie czy robot osiagnal zadane polozenie odbywa sie poprzez sprawdzenie czy poprzednia odleglosc
     # robota od polozenia zadanego jest mniejsza od aktualnej (tzn czy robot minal cel)
-    lastDistance  = math.sqrt(math.pow(goal.y - currentPosition.position.y, 2) +
-                                 math.pow(goal.x - currentPosition.position.x, 2))
+    lastDistance = math.sqrt(math.pow(goal.y - currentPosition.position.y, 2) +
+                             math.pow(goal.x - currentPosition.position.x, 2))
     while True:
         twist.linear.x = moveSpeed  # 0.3m/s
         distToTarget = math.sqrt(math.pow(goal.y - currentPosition.position.y, 2) +
                                  math.pow(goal.x - currentPosition.position.x, 2))
-        if lastDistance - distToTarget < 0:
+        if lastDistance - distToTarget < -0.01:
             break
         pub.publish(twist)
         lastDistance = distToTarget
@@ -68,6 +68,8 @@ def callback(data):
     twist.linear.x = 0.0
     pub.publish(twist)
 
+
+
 """ Funkcja sluzaca do odbierania wiadomosci z tematu /elektron/mobile_base_controller/odom. """
 def getCurrentPosition(newPosition):
     global currentPosition
@@ -76,13 +78,25 @@ def getCurrentPosition(newPosition):
 
 
 rospy.init_node('inter_odo', anonymous=True)
-rospy.Subscriber("new_pose", Pose2D, callback)
 rospy.Subscriber("elektron/mobile_base_controller/odom", Odometry, getCurrentPosition)
 
 if __name__ == '__main__':
     try:
-        while not rospy.is_shutdown():
-            print("Dawaj pozycje bo czekam.\n")
-            rospy.spin()
+        print "Ruch po kwadracie o boku 1"
+
+        # Ruch do pozycji x: 1, y: 0
+        moveToGoal(Pose2D(1, 0, 0), moveSpeed=0.3)
+        print 'Wracam'
+        rospy.sleep(1)
+        # Ruch do pozycji x: 1, y: 1
+        moveToGoal(Pose2D(0, 1, 0), moveSpeed=0.3)
+        rospy.sleep(1)
+        # Ruch do pozycji x: 0, y: 1
+        moveToGoal(Pose2D(0, 1, 0), moveSpeed=0.3)
+        rospy.sleep(1)
+        # Ruch do pozycji x: 0, y: 0
+        moveToGoal(Pose2D(0, 1, 0), moveSpeed=0.3)
+        exit(0)
+
     except rospy.ROSInterruptException:
         pass
