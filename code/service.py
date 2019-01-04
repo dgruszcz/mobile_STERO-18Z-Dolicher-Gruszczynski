@@ -2,7 +2,10 @@
 
 import sys
 import rospy
-from beginner_tutorials.srv import *
+from geometry_msgs.msg import PoseStamped
+from nav_msgs.msg import Path
+from stero_mobile_init.srv import ElektronSrv
+
 pub = rospy.Publisher('/created_paths', Path, queue_size=10)
 
 def createPlan(req):
