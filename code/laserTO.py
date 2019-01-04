@@ -76,6 +76,7 @@ if __name__ == '__main__':
         print "Wykonanie pelnego obrotu."
         # Obrot (odczekiwanie odpowiedniego czasu + sprawdzenie)
         do360(rotSpeed=0.3)
+        rospy.sleep(1)
         bag.close()
         exit(0)
 

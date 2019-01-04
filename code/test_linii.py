@@ -67,8 +67,9 @@ if __name__ == '__main__':
         rospy.sleep(1)
         # Ruch do pozycji x: 0, y: 0
         moveToGoal(Pose2D(0, 0, 0), moveSpeed=-0.3)
-        bag.close()
-        exit(0)
+        rospy.sleep(1)
 
     except rospy.ROSInterruptException:
         pass
+    finally:
+        bag.close()

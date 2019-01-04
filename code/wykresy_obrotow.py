@@ -4,7 +4,7 @@ import numpy as np
 import math
 
 
-bag = rosbag.Bag('../laserTO_odom_tune.bag')
+bag = rosbag.Bag('../tuneTO.bag')
 print bag.get_message_count()
 
 kat_gazebo = []

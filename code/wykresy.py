@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import rosbag
 
 test_kwadratu = True
-bag = rosbag.Bag('../laserTK_odom_tune.bag')
+bag = rosbag.Bag('../tuneTL.bag')
 print bag.get_message_count()
 x_gazebo = []
 y_gazebo = []

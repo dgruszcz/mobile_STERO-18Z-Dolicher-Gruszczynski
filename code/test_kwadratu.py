@@ -8,7 +8,7 @@ import rosbag
 
 pub = rospy.Publisher('mux_vel_nav/cmd_vel', Twist, queue_size=10)
 pubError = rospy.Publisher('errors', Float64, queue_size=10)
-bag = rosbag.Bag('diffTK.bag', 'w')
+bag = rosbag.Bag('tuneTK.bag', 'w')
 currentPosition = Pose()
 realPosition = Pose()
 
@@ -19,7 +19,7 @@ def getRotZ(q):
     return yaw
 
 def moveToGoal(goal, moveSpeed=0.3, rotSpeed=0.3, frequency=50):
-    print "Dobra jedziem. Pozycja docelowa: ", goal.x, goal.y
+    print "Pozycja docelowa: ", goal.x, goal.y
 
     # Obliczanie kata do jakiego musi sie ustawic robot
     kat = math.atan2(goal.y - currentPosition.position.y, goal.x - currentPosition.position.x)
@@ -98,6 +98,7 @@ if __name__ == '__main__':
         rospy.sleep(1)
         # Ruch do pozycji x: 0, y: 0
         moveToGoal(Pose2D(0, 0, 0), moveSpeed=0.3)
+        rospy.sleep(1.5)
 
     except rospy.ROSInterruptException:
         pass
