@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import rosbag
 
-test_kwadratu = True
+test_kwadratu = False
 bag = rosbag.Bag('../tuneTL.bag')
 print bag.get_message_count()
 x_gazebo = []
@@ -36,7 +36,7 @@ else:
 plt.xlabel('Polozenie w osi X')
 plt.ylabel('Polozenie w osi Y')
 
-plt.legend(loc='center')
+plt.legend(loc='lower right')
 plt.show()
 
 
