@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
 from nav_msgs.srv import *
-from tf import *
 import rospy
 import PyKDL
+from stero_mobile_init.srv import ElektronSrv
+from geometry_msgs.msg import PoseStamped
 
 def planingServer():
     rospy.wait_for_service('our_service')
@@ -12,10 +13,11 @@ def planingServer():
     while not rospy.is_shutdown():
         try:
             print 'Podaj pozycje zadana'
-            pose.pose.position.y = input("Wprowadz x ")
+            pose.pose.position.x = input("Wprowadz x ")
             pose.pose.position.y = input("Wprowadz y ")
             theta = input("Wprowadz kat theta ")
-            pose.pose.orientaion = PyKDL.RotZ(theta).GetQuaternion()
+            quat = PyKDL.Rotation().RotZ(theta).GetQuaternion()
+            pose.pose.orientation.x, pose.pose.orientation.y, pose.pose.orientation.z, pose.pose.orientation.w = quat[0], quat[1], quat[2], quat[3]
             resp = service(pose)
         except SyntaxError:
             sys.exit()  
