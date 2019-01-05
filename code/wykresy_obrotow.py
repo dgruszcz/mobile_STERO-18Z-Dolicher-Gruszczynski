@@ -3,9 +3,9 @@ import rosbag
 import numpy as np
 import math
 
-name = 'laserTO_odom_tune'
-name2 = "laser_scan_matcher+tune_controller"
-bag = rosbag.Bag('../'+name+'.bag')
+name = 'tuneTO'
+name2 = "tune_controller"
+bag = rosbag.Bag('../dontAskMeWhy/'+name+'.bag')
 print bag.get_message_count()
 
 kat_gazebo = []
@@ -72,18 +72,21 @@ plt.xlabel('Czas [s]')
 plt.ylabel('Kat [rad]')
 plt.title('Sterowanie ze sprzezeniem (obrot o 360 stopni)\n'+name2)
 plt.legend(loc='upper left')
-plt.savefig('../wykresy2/'+name+'.png', dpi=600)
+#plt.savefig('../wykresy2/'+name+'.png', dpi=600)
 plt.show()
 
 
 # """ Blad: """
 #
-# for i in range(len(time)):
-#     time[len(time)-1-i] = time[len(time)-1-i] - time[0]
-#
-# plt.figure(2)
-# plt.plot(time, blad)
-# plt.xlabel('Czas [s]')
-# plt.ylabel('Blad [rad]')
-# plt.title('Sterowanie ze sprzezeniem (obrot o 360 stopni)\nlaser_scan_matcher+tune_controller')
-# plt.show()
+ref = np.array(kat_gazebo)
+real = np.array(kat_sensor)
+blad = np.fabs((real-ref))
+
+plt.figure(2, figsize=(10, 7), dpi=100)
+plt.plot(np.linspace(0, 40, len(blad)), blad, label=name2)
+plt.xlabel('Czas [s]')
+plt.ylabel('Blad [rad]')
+plt.title('Porownanie bledow dla testu obrotu')
+plt.savefig('../wykresy2/'+name+'_blad.png', dpi=600)
+plt.legend(loc="upper left")
+plt.show()
