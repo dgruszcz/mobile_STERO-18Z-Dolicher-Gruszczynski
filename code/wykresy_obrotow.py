@@ -3,8 +3,9 @@ import rosbag
 import numpy as np
 import math
 
-
-bag = rosbag.Bag('../tuneTO.bag')
+name = 'laserTO_odom_tune'
+name2 = "laser_scan_matcher+tune_controller"
+bag = rosbag.Bag('../'+name+'.bag')
 print bag.get_message_count()
 
 kat_gazebo = []
@@ -50,35 +51,39 @@ for i in range(len(time)):
     time[len(time)-1-i] = time[len(time)-1-i] - time[0]
 
 for i in range(len(blad)):
-    if blad[i] > 2.0:
-        blad[i] = blad[i-1]
+    blad[i] += -2*math.pi if blad[i] > math.pi else (2*math.pi if blad[i] < -math.pi else 0)
+    if blad[i] < 0:
+        blad[i] = -blad[i]
 
 
-moveDuration = 2*math.pi / 0.57  # liczba sekund
+moveDuration = 2*math.pi / 0.565  # liczba sekund
 samplesCount = moveDuration/0.020    # wezly publikuja z czestotliwoscia 50Hz
 
-kat_zadany = np.linspace(0, 2*math.pi, int(samplesCount))
-kat_zadany = np.hstack((np.zeros(len(time)-int(samplesCount)), kat_zadany))
+kat_zadany1 = np.zeros(55)
+kat_zadany2 = np.linspace(0, 2*math.pi, int(samplesCount))
+kat_zadany3 = np.ones(len(kat_gazebo) - int(samplesCount) - len(kat_zadany1))*2*math.pi
+kat_zadany = np.hstack((kat_zadany1, kat_zadany2, kat_zadany3))
 
-plt.figure(1)
+plt.figure(1, figsize=(10, 6), dpi=100)
 plt.plot(time, kat_gazebo, label='Obrot rzeczywisty', lw=2.0)
 plt.plot(time, kat_sensor, label='Obrot zmierzony', lw=2.0)
 plt.plot(time, kat_zadany, label='Obrot zadany', ls='--')
 plt.xlabel('Czas [s]')
 plt.ylabel('Kat [rad]')
-plt.title('Sterowanie ze sprzezeniem (obrot o 360 stopni)\nlaser_scan_matcher+tune_controller')
+plt.title('Sterowanie ze sprzezeniem (obrot o 360 stopni)\n'+name2)
 plt.legend(loc='upper left')
+plt.savefig('../wykresy2/'+name+'.png', dpi=600)
 plt.show()
 
 
-""" Blad: """
-
-for i in range(len(time)):
-    time[len(time)-1-i] = time[len(time)-1-i] - time[0]
-
-plt.figure(2)
-plt.plot(time, blad)
-plt.xlabel('Czas [s]')
-plt.ylabel('Blad [rad]')
-plt.title('Sterowanie ze sprzezeniem (obrot o 360 stopni)\nlaser_scan_matcher+tune_controller')
-plt.show()
+# """ Blad: """
+#
+# for i in range(len(time)):
+#     time[len(time)-1-i] = time[len(time)-1-i] - time[0]
+#
+# plt.figure(2)
+# plt.plot(time, blad)
+# plt.xlabel('Czas [s]')
+# plt.ylabel('Blad [rad]')
+# plt.title('Sterowanie ze sprzezeniem (obrot o 360 stopni)\nlaser_scan_matcher+tune_controller')
+# plt.show()

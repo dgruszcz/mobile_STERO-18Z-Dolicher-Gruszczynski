@@ -1,8 +1,10 @@
 import matplotlib.pyplot as plt
 import rosbag
 
-test_kwadratu = False
-bag = rosbag.Bag('../tuneTL.bag')
+test_kwadratu = True
+name = 'laserTK_no_odom'
+name2 = "laser_scan_matcher"
+bag = rosbag.Bag('../'+name+'.bag')
 print bag.get_message_count()
 x_gazebo = []
 y_gazebo = []
@@ -24,31 +26,33 @@ for topic, msg, t in bag.read_messages(topics = ['/enkoder', '/errors', '/gazebo
 bag.close()
 
 """ Tajektoria: """
-plt.figure(1)
+plt.figure(1, figsize=(10, 10), dpi=100)
 plt.plot(x_gazebo, y_gazebo, label='Polozenie rzeczywiste', lw=2.0)
 plt.plot(x_sensor, y_sensor, label='Polozenie zmierzone')
 if test_kwadratu:
     plt.plot([0, 1, 1, 0, 0], [0, 0, 1, 1, 0], label='Trajektoria zadana', ls='--')
-    plt.title('Sterowanie ze sprzezeniem (ruch po kwadracie)\nlaser_scan_matcher+tune_controller')
+    plt.title('Sterowanie ze sprzezeniem (ruch po kwadracie)\n' + name2)
 else:
     plt.plot([0, 1], [0, 0], label='Trajektoria zadana', ls='--')
-    plt.title('Sterowanie ze sprzezeniem (ruch po linii)\nlaser_scan_matcher+tune_controller')
+    plt.title('Sterowanie ze sprzezeniem (ruch po linii)\n' + name2)
 plt.xlabel('Polozenie w osi X')
 plt.ylabel('Polozenie w osi Y')
 
-plt.legend(loc='lower right')
+plt.legend(loc='center')
+plt.savefig('../wykresy2/'+name+'.png', dpi=600)
 plt.show()
 
 
-""" Blad: """
-for i in range(len(time)):
-    time[len(time)-1-i] = time[len(time)-1-i] - time[0]
-plt.figure(2)
-plt.plot(time, blad)
-plt.xlabel('Czas [s]')
-plt.ylabel('Blad (odleglosc) [cm]')
-if test_kwadratu:
-    plt.title('Sterowanie ze sprzezeniem (ruch po kwadracie)\nlaser_scan_matcher+tune_controller')
-else:
-    plt.title('Sterowanie ze sprzezeniem (ruch po linii)\nlaser_scan_matcher+diff_drive_controller')
-plt.show()
+
+# """ Blad: """
+# for i in range(len(time)):
+#     time[len(time)-1-i] = time[len(time)-1-i] - time[0]
+# plt.figure(2)
+# plt.plot(time, blad)
+# plt.xlabel('Czas [s]')
+# plt.ylabel('Blad (odleglosc) [cm]')
+# if test_kwadratu:
+#     plt.title('Sterowanie ze sprzezeniem (ruch po kwadracie)\nlaser_scan_matcher+tune_controller')
+# else:
+#     plt.title('Sterowanie ze sprzezeniem (ruch po linii)\nlaser_scan_matcher+diff_drive_controller')
+# plt.show()

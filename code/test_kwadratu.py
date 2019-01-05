@@ -8,7 +8,7 @@ import rosbag
 
 pub = rospy.Publisher('mux_vel_nav/cmd_vel', Twist, queue_size=10)
 pubError = rospy.Publisher('errors', Float64, queue_size=10)
-bag = rosbag.Bag('tuneTK.bag', 'w')
+bag = rosbag.Bag('diffTK.bag', 'w')
 currentPosition = Pose()
 realPosition = Pose()
 

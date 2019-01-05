@@ -8,7 +8,7 @@ import rosbag
 
 pub = rospy.Publisher('mux_vel_nav/cmd_vel', Twist, queue_size=10)
 pubError = rospy.Publisher('errors', Float64, queue_size=10)
-bag = rosbag.Bag('tuneTO.bag', 'w')
+bag = rosbag.Bag('diffTO.bag', 'w')
 currentPosition = Pose()
 realPosition = Pose()
 
@@ -73,8 +73,7 @@ if __name__ == '__main__':
         print "Wykonanie pelnego obrotu."
         # Obrot (odczekiwanie odpowiedniego czasu + sprawdzenie)
         do360(rotSpeed=0.3)
-        rospy.sleep(1) # tune nie zatrzymuje sie od razu
-
+        rospy.sleep(1.5)
     except rospy.ROSInterruptException:
         pass
     finally:

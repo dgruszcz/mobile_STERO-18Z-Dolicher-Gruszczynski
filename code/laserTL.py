@@ -8,7 +8,7 @@ import rosbag
 
 pub = rospy.Publisher('mux_vel_nav/cmd_vel', Twist, queue_size=10)
 pubError = rospy.Publisher('errors', Float64, queue_size=10)
-bag = rosbag.Bag('laserTL_odom_tune.bag', 'w')
+bag = rosbag.Bag('laserTL_odom_diff.bag', 'w')
 currentPosition = Pose2D()
 realPosition = Pose2D()
 
@@ -75,8 +75,7 @@ if __name__ == '__main__':
         rospy.sleep(1)
         # Ruch do pozycji x: 0, y: 0
         moveToGoal(Pose2D(0, 0, 0), moveSpeed=-0.3)
-
-
+        rospy.sleep(1.5)
     except rospy.ROSInterruptException:
         pass
     finally:
