@@ -11,11 +11,11 @@ laserTuneError = []
 
 """ Test linii """
 
-diff = rosbag.Bag('../diffTL.bag')
-tune = rosbag.Bag('../tuneTL.bag')
-laser_no_odom = rosbag.Bag('../laserTL_no_odom.bag')
-laser_diff = rosbag.Bag('../laserTL_odom_diff.bag')
-laser_tune = rosbag.Bag('../laserTL_odom_tune.bag')
+diff = rosbag.Bag('../dontAskMeWhy/diffTL.bag')
+tune = rosbag.Bag('../dontAskMeWhy/tuneTL.bag')
+laser_no_odom = rosbag.Bag('../dontAskMeWhy/laserTL_no_odom.bag')
+laser_diff = rosbag.Bag('../dontAskMeWhy/laserTL_odom_diff.bag')
+laser_tune = rosbag.Bag('../dontAskMeWhy/laserTL_odom_tune.bag')
 
 
 for topic, msg, t in diff.read_messages(topics = ['/errors']):
@@ -63,11 +63,11 @@ laserError = []
 laserDiffError= []
 laserTuneError = []
 
-diff = rosbag.Bag('../diffTO.bag')
-tune = rosbag.Bag('../tuneTO.bag')
-laser_no_odom = rosbag.Bag('../laserTO_no_odom.bag')
-laser_diff = rosbag.Bag('../laserTO_odom_diff.bag')
-laser_tune = rosbag.Bag('../laserTO_odom_tune.bag')
+diff = rosbag.Bag('../dontAskMeWhy/diffTO.bag')
+tune = rosbag.Bag('../dontAskMeWhy/tuneTO.bag')
+laser_no_odom = rosbag.Bag('../dontAskMeWhy/laserTO_no_odom.bag')
+laser_diff = rosbag.Bag('../dontAskMeWhy/laserTO_odom_diff.bag')
+laser_tune = rosbag.Bag('../dontAskMeWhy/laserTO_odom_tune.bag')
 
 
 for topic, msg, t in diff.read_messages(topics = ['/errors']):
@@ -123,7 +123,7 @@ plt.xlabel('Czas [s]')
 plt.ylabel('Blad (obrot) [rad]')
 plt.title('Porownanie bledow dla testu obrotu')
 plt.legend(loc="upper left")
-plt.savefig('../wykresy2/tuneTO_blad.png', dpi=600)
+plt.savefig('../wykresy2/tuneTO_blad2.png', dpi=600)
 #plt.show()
 
 print 'Test obrotu'
@@ -137,11 +137,11 @@ laserError = []
 laserDiffError= []
 laserTuneError = []
 
-diff = rosbag.Bag('../diffTK.bag')
-tune = rosbag.Bag('../tuneTK.bag')
-laser_no_odom = rosbag.Bag('../laserTK_no_odom.bag')
-laser_diff = rosbag.Bag('../laserTK_odom_diff.bag')
-laser_tune = rosbag.Bag('../laserTK_odom_tune.bag')
+diff = rosbag.Bag('../dontAskMeWhy/diffTK.bag')
+tune = rosbag.Bag('../dontAskMeWhy/tuneTK.bag')
+laser_no_odom = rosbag.Bag('../dontAskMeWhy/laserTK_no_odom.bag')
+laser_diff = rosbag.Bag('../dontAskMeWhy/laserTK_odom_diff.bag')
+laser_tune = rosbag.Bag('../dontAskMeWhy/laserTK_odom_tune.bag')
 
 
 for topic, msg, t in diff.read_messages(topics = ['/errors']):
