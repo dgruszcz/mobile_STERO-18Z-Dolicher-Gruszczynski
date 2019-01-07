@@ -18,6 +18,8 @@ def planingServer():
             theta = input("Wprowadz kat theta ")
             quat = PyKDL.Rotation().RotZ(theta).GetQuaternion()
             pose.pose.orientation.x, pose.pose.orientation.y, pose.pose.orientation.z, pose.pose.orientation.w = quat[0], quat[1], quat[2], quat[3]
+            pose.header.frame_id = 'map'
+            pose.header.stamp = rospy.Time(0)
             resp = service(pose)
         except SyntaxError:
             sys.exit()  
