@@ -1,0 +1,12 @@
+plugins: 
+    - {name: static_map,       type: "costmap_2d::StaticLayer"}
+    - {name: inflation,        type: "costmap_2d::InflationLayer"}
+
+static_frame: true
+publish_frequency: 1.0
+update_frequency: 1.0
+rolling_window: false
+
+inflation:
+    inflation_radius: 0.55
+    cost_scaling_factor: 10.0
