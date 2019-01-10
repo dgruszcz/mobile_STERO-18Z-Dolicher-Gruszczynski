@@ -5,4 +5,5 @@
   <rosparam file="$(find stero_mobile_init)/yamls/local_costmap.yaml" command="load" ns="/cost_handler/local_costmap" />
   <rosparam file="$(find stero_mobile_init)/yamls/global_costmap.yaml" command="load" ns="/cost_handler/global_costmap" />
   <rosparam file="$(find stero_mobile_init)/yamls/global_planner_config.yaml" command="load" ns="/cost_handler/global_planner" />
+  <rosparam file="$(find stero_mobile_init)/yamls/baseLocalPlanner.yaml" command="load" ns="/cost_handler/local_planner" />
 </launch>
