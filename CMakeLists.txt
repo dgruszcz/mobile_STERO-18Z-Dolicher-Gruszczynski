@@ -7,8 +7,14 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   std_msgs
   geometry_msgs
+  nav_core
+  global_planner
   tf
+  tf2
+  tf2_ros
   nav_msgs
+  costmap_2d
+  base_local_planner
 )
 add_service_files(
   FILES
@@ -37,3 +43,7 @@ install (DIRECTORY launch/ DESTINATION share/${CMAKE_PROJECT_NAME}/launch
          FILES_MATCHING PATTERN "*.launch*")
 install (DIRECTORY config/ DESTINATION share/${CMAKE_PROJECT_NAME}/config 
          FILES_MATCHING PATTERN "*.yaml")
+
+add_executable(costmap src/costmap.cpp)
+target_link_libraries(costmap ${catkin_LIBRARIES})
+add_dependencies(costmap stero_mobile_init_generate_messages_cpp)

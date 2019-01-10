@@ -1,0 +1,7 @@
+allow_unknown: true # Zezwala na generowanie trasy uwzgledniajacej nieznane przestrzenie
+default_tolerance: 0.01 # Tolerancja pozycji docelowej
+lethal_cost: 253  # Koszt informujacy o przeszkodzie
+neutral_cost: 50  # Nautralny koszt
+cost_factor: 3    # Wspolczynnik mnozenia kosztu mapy kosztow
+orientation_mode: 2 # Ustawienie sposobu generacji orientacji kazdego punktu
+
