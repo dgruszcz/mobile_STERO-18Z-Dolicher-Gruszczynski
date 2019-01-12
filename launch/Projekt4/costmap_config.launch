@@ -2,8 +2,9 @@
   <include file="$(find stero_mobile_init)/launch/elektron_world.launch" />
   <node name="static_tf0" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 map odom 10"/>
   <node name="map_server" pkg="map_server" type="map_server" args="$(find stero_mobile_init)/mapa_sruby.yaml"/>
-  <rosparam file="$(find stero_mobile_init)/yamls/local_costmap.yaml" command="load" ns="/cost_handler/local_costmap" />
-  <rosparam file="$(find stero_mobile_init)/yamls/global_costmap.yaml" command="load" ns="/cost_handler/global_costmap" />
-  <rosparam file="$(find stero_mobile_init)/yamls/global_planner_config.yaml" command="load" ns="/cost_handler/global_planner" />
-  <rosparam file="$(find stero_mobile_init)/yamls/baseLocalPlanner.yaml" command="load" ns="/cost_handler/local_planner" />
+  <rosparam file="$(find stero_mobile_init)/yamls/local_costmap.yaml" command="load" ns="/trajectory_executor/local_costmap" />
+  <rosparam file="$(find stero_mobile_init)/yamls/global_costmap.yaml" command="load" ns="/trajectory_executor/global_costmap" />
+  <rosparam file="$(find stero_mobile_init)/yamls/global_planner_config.yaml" command="load" ns="/trajectory_executor/global_planner" />
+  <rosparam file="$(find stero_mobile_init)/yamls/baseLocalPlanner.yaml" command="load" ns="/trajectory_executor/local_planner" />
+  <remap from="odom" to="elektron/mobile_base_controller/odom"/>
 </launch>

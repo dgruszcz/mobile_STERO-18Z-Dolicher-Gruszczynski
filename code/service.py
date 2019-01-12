@@ -9,7 +9,7 @@ from nav_msgs.srv import GetPlan, GetPlanResponse
 import tf
 import math
 
-pub = rospy.Publisher('/created_paths', GetPlanResponse, queue_size=10)
+pub1 = rospy.Publisher('/created_paths', GetPlanResponse, queue_size=10)
 pub = rospy.Publisher('mux_vel_nav/cmd_vel', Twist, queue_size=10)
 currentPosition = Pose()
 
@@ -29,7 +29,8 @@ def createPlan(req):
     #solver = tf.TransformerROS()
     #pose = solver.transformPose('map', pose)
     plan = planer_server(pose, req.goal, tolerance)
-    for i in range(0, len(plan.plan.poses), 4):
+    for i in range(2, len(plan.plan.poses), 3):
+        pub1.publish(plan)
         # Predkosc ruchu
         moveSpeed = 0.3
 

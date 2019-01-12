@@ -4,8 +4,8 @@ plugins: # Definicje warstw
 
 global_frame: base_link
 always_send_full_costmap: true
-publish_frequency: 20.0
-update_frequency: 20.0
+publish_frequency: 10.0
+update_frequency: 10.0
 rolling_window: true
 footprint: [[-0.19, -0.14], [0.19, -0.14], [0.19, 0.14], [-0.19, 0.14]] 
 width: 5.0
