@@ -38,7 +38,7 @@ bool plan_and_execute(nav_msgs::GetPlan::Request  &req, nav_msgs::GetPlan::Respo
   res.plan.poses = plan;
   geometry_msgs::Twist vel = geometry_msgs::Twist();
   localPlanner->setPlan(plan);
-  ros::Rate loop_rate(1000);
+  ros::Rate loop_rate(50);
   int counter = 0;
   bool state;
   while(!localPlanner->isGoalReached() && ros::ok()){
@@ -47,15 +47,15 @@ bool plan_and_execute(nav_msgs::GetPlan::Request  &req, nav_msgs::GetPlan::Respo
     ROS_INFO("state: %d", state);
     if (!state){
         localPlanner->setPlan(plan);
-//        counter++;
-//        if (counter == 20){
-//            ROS_INFO("Proba uwolnienia z zakleszczenia\n Wykonanie pelnego obrotu");
-//            do360();
-//            localPlanner->setPlan(plan);
-//            counter = 0;
-//        }
-//    } else {
-//        counter = 0;
+        counter++;
+        if (counter == 30){
+            ROS_INFO("Proba uwolnienia z zakleszczenia\n Wykonanie pelnego obrotu");
+            do360();
+            localPlanner->setPlan(plan);
+           counter = 0;
+        }
+    } else {
+        counter = 0;
     }
     ros::spinOnce();
     loop_rate.sleep();
@@ -102,7 +102,7 @@ float getRotZ(geometry_msgs::Quaternion q){
 
 void do360(float rotSpeed, float frequency){
     geometry_msgs::Twist twist = geometry_msgs::Twist();
-    twist.angular.z = rotSpeed;
+    
     float startingAngle;
     startingAngle = getRotZ(currentPosition.orientation);
 
@@ -110,7 +110,17 @@ void do360(float rotSpeed, float frequency){
     int iterationsToSkip = 10;
 
     ros::Rate rate(frequency);  // Nadawanie ze stala czestotliwoscia
+    twist.linear.x = -0.3;
 
+	for (int i=0; i < 20; ++i){
+        pub.publish(twist);
+        rate.sleep();
+        ros::spinOnce();
+    }
+    twist.linear.x = 0.0;
+	pub.publish(twist);
+
+    twist.angular.z = rotSpeed;
     for (int i=0; i < iterationsToSkip; ++i){
         pub.publish(twist);
         rate.sleep();

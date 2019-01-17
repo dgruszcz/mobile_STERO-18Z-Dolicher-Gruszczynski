@@ -14,7 +14,7 @@ meter_scoring: true #okreslenie czy path_distance i goal_distance sa w metrach c
 sim_time: 3 #czas symulacji do przodu wyznaczanych trajektorii
 vx_samples: 3 #liczba probek wykorzystanych przy liczeniu prędkości liniowych dla osi x (symulacja) 
 vtheta_samples: 20 #liczba probek wykorzystanych przy liczeniu prędkości katowych (symulacja) 
-heading_lookahead: 4 #Jak daleko "patrzeć" do przodu w metrach, kiedy planuje się różne trajektorie rotacji bedac w miejscu
+heading_lookahead: 2 #Jak daleko "patrzeć" do przodu w metrach, kiedy planuje się różne trajektorie rotacji bedac w miejscu
 pdist_scale: 1 #okresla jak bardzo robot ma trzymac sie sciezki
 gdist_scale: 1 #okresla jak bardzo robot ma probowac osiagac wyznaczony lokalny cel (kontroluje tez predkosci)
 occdist_scale: 0.01 #jak mocno ma starac sie robot unikac przeszkody, gdy małe wartosci (np 0.01 (domyślne)) to robot przejedzie przez np waskie drzwi, a gdy duże to nie przejedzie (np 2)

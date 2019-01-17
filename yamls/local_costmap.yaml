@@ -24,5 +24,5 @@ obstacles:
     publish_voxel_map: false
 
 inflation:
-    inflation_radius: 0.18
-    cost_scaling_factor: 40.0
+    inflation_radius: 0.15
+    cost_scaling_factor: 30.0
