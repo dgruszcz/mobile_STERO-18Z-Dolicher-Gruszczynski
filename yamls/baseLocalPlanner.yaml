@@ -7,11 +7,11 @@ max_vel_theta: 0.6 #max predkosc katowa
 min_vel_theta: -0.6 #min predkosc katowa
 min_in_place_vel_theta: 0.4 #Minimalna prędkość obrotowa dozwolona dla podstawy podczas wykonywania obrotów w miejscu w radianach / sek
 holonomic_robot: false #holonomicznosc robota (domyslnie true)
-yaw_goal_tolerance: 0.1 #wielkosc bledu tolerancji dla rotacji przy osiaganiu celu
-xy_goal_tolerance: 0.1 #wielkosc bledu toleranicj dla odleglosci w osiach x i y przy osiaganiu celu
+yaw_goal_tolerance: 0.15 #wielkosc bledu tolerancji dla rotacji przy osiaganiu celu
+xy_goal_tolerance: 0.15 #wielkosc bledu toleranicj dla odleglosci w osiach x i y przy osiaganiu celu
 latch_xy_goal_tolerance: false #gdy raz osiaganieta pozycja celu (w zakresie tolerancji), robot się zatrzyma nawet gdy jego ruch konczy sie poza tolerancja celu
 meter_scoring: true #okreslenie czy path_distance i goal_distance sa w metrach czy w dlugosciach komorek na mapie
-sim_time: 2 #czas symulacji do przodu wyznaczanych trajektorii
+sim_time: 3 #czas symulacji do przodu wyznaczanych trajektorii
 vx_samples: 3 #liczba probek wykorzystanych przy liczeniu prędkości liniowych dla osi x (symulacja) 
 vtheta_samples: 20 #liczba probek wykorzystanych przy liczeniu prędkości katowych (symulacja) 
 heading_lookahead: 4 #Jak daleko "patrzeć" do przodu w metrach, kiedy planuje się różne trajektorie rotacji bedac w miejscu
