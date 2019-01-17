@@ -21,6 +21,7 @@ global_planner::GlobalPlanner *globalPlanner;
 std::vector<geometry_msgs::PoseStamped> plan;
 ros::Publisher pub;
 geometry_msgs::Pose currentPosition = geometry_msgs::Pose();
+ costmap_2d::Costmap2DROS *local_costmap;
 
 
 
@@ -38,27 +39,40 @@ bool plan_and_execute(nav_msgs::GetPlan::Request  &req, nav_msgs::GetPlan::Respo
   res.plan.poses = plan;
   geometry_msgs::Twist vel = geometry_msgs::Twist();
   localPlanner->setPlan(plan);
-  ros::Rate loop_rate(50);
+  ros::Rate loop_rate(20);
   int counter = 0;
   bool state;
   while(!localPlanner->isGoalReached() && ros::ok()){
     state = localPlanner->computeVelocityCommands(vel);
     pub.publish(vel);
     ROS_INFO("state: %d", state);
-    if (!state){
-        localPlanner->setPlan(plan);
+	for(int i =0; i<= 20; i++){
+		pub.publish(vel);
+		ros::spinOnce();
+	    loop_rate.sleep();
+	}
+    if (!state && vel.linear.x <= 0.1){
         counter++;
-        if (counter == 30){
+        if (counter >= 2){
             ROS_INFO("Proba uwolnienia z zakleszczenia\n Wykonanie pelnego obrotu");
-            do360();
-            localPlanner->setPlan(plan);
-           counter = 0;
-        }
-    } else {
-        counter = 0;
-    }
+			geometry_msgs::PoseStamped newStart = geometry_msgs::PoseStamped();
+			newStart.header.frame_id = "map";
+			newStart.pose = currentPosition;
+			if(!globalPlanner->makePlan(newStart, req.goal, plan)){
+	    		ROS_INFO("Unable to calculate plan. Try again");
+				do360();
+			}
+			local_costmap->resetLayers();
+		    localPlanner->setPlan(plan);
+		}
+	}
+//            do360();
+//           counter = 0;
+//        }
+//    } else {
+//        counter = 0;
+//    }
     ros::spinOnce();
-    loop_rate.sleep();
   }
   ROS_INFO("Cel osiagniety");
   return true;
@@ -77,12 +91,16 @@ int main(int argc, char **argv)
   ros::Subscriber sub = n.subscribe("elektron/mobile_base_controller/odom", 1000, getCurrentPosition);
   tf2_ros::Buffer buffer(ros::Duration(10));
   tf2_ros::TransformListener tf(buffer);
-  costmap_2d::Costmap2DROS local_costmap("local_costmap", buffer);
+
+  local_costmap	= new costmap_2d::Costmap2DROS("local_costmap", buffer);
+
+  //costmap_2d::Costmap2DROS local_costmap("local_costmap", buffer);
   costmap_2d::Costmap2DROS global_costmap("global_costmap", buffer);
+
   globalPlanner = new global_planner::GlobalPlanner();
   localPlanner = new base_local_planner::TrajectoryPlannerROS();
   globalPlanner->initialize("global_planner", global_costmap.getCostmap(), "map");
-  localPlanner->initialize("local_planner", &buffer, &local_costmap);
+  localPlanner->initialize("local_planner", &buffer, local_costmap);
   while(ros::ok()){
     ros::spin();
   }
@@ -119,7 +137,7 @@ void do360(float rotSpeed, float frequency){
     }
     twist.linear.x = 0.0;
 	pub.publish(twist);
-
+/*
     twist.angular.z = rotSpeed;
     for (int i=0; i < iterationsToSkip; ++i){
         pub.publish(twist);
@@ -139,5 +157,5 @@ void do360(float rotSpeed, float frequency){
         rate.sleep();
     }
     twist.angular.z = 0.0;
-    pub.publish(twist);
+    pub.publish(twist);*/
 }
