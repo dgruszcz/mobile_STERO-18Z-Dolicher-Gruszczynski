@@ -5,17 +5,17 @@ max_vel_x: 0.4 #max predkosc liniowa w osi x
 min_vel_x: 0.1 #min predkosc liniowa w osi x
 max_vel_theta: 0.6 #max predkosc katowa
 min_vel_theta: -0.6 #min predkosc katowa
-min_in_place_vel_theta: 0.25 #Minimalna prędkość obrotowa dozwolona dla podstawy podczas wykonywania obrotów w miejscu w radianach / sek
+min_in_place_vel_theta: 0.4 #Minimalna prędkość obrotowa dozwolona dla podstawy podczas wykonywania obrotów w miejscu w radianach / sek
 holonomic_robot: false #holonomicznosc robota (domyslnie true)
-yaw_goal_tolerance: 0.25 #wielkosc bledu tolerancji dla rotacji przy osiaganiu celu
-xy_goal_tolerance: 0.25 #wielkosc bledu toleranicj dla odleglosci w osiach x i y przy osiaganiu celu
+yaw_goal_tolerance: 0.1 #wielkosc bledu tolerancji dla rotacji przy osiaganiu celu
+xy_goal_tolerance: 0.1 #wielkosc bledu toleranicj dla odleglosci w osiach x i y przy osiaganiu celu
 latch_xy_goal_tolerance: false #gdy raz osiaganieta pozycja celu (w zakresie tolerancji), robot się zatrzyma nawet gdy jego ruch konczy sie poza tolerancja celu
 meter_scoring: true #okreslenie czy path_distance i goal_distance sa w metrach czy w dlugosciach komorek na mapie
-sim_time: 3 #czas symulacji do przodu wyznaczanych trajektorii
+sim_time: 2 #czas symulacji do przodu wyznaczanych trajektorii
 vx_samples: 3 #liczba probek wykorzystanych przy liczeniu prędkości liniowych dla osi x (symulacja) 
 vtheta_samples: 20 #liczba probek wykorzystanych przy liczeniu prędkości katowych (symulacja) 
-heading_lookahead: 3 #Jak daleko "patrzeć" do przodu w metrach, kiedy planuje się różne trajektorie rotacji bedac w miejscu
+heading_lookahead: 4 #Jak daleko "patrzeć" do przodu w metrach, kiedy planuje się różne trajektorie rotacji bedac w miejscu
 pdist_scale: 1 #okresla jak bardzo robot ma trzymac sie sciezki
 gdist_scale: 1 #okresla jak bardzo robot ma probowac osiagac wyznaczony lokalny cel (kontroluje tez predkosci)
-occdist_scale: 0.05 #jak mocno ma starac sie robot unikac przeszkody, gdy małe wartosci (np 0.01 (domyślne)) to robot przejedzie przez np waskie drzwi, a gdy duże to nie przejedzie (np 2)
+occdist_scale: 0.01 #jak mocno ma starac sie robot unikac przeszkody, gdy małe wartosci (np 0.01 (domyślne)) to robot przejedzie przez np waskie drzwi, a gdy duże to nie przejedzie (np 2)
 

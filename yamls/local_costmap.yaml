@@ -21,8 +21,8 @@ obstacles:
     footprint_clearing_enabled: true
     z_resolution: 0.2
     z_voxels: 10
-    publish_voxel_map: true
+    publish_voxel_map: false
 
 inflation:
-    inflation_radius: 0.25
-    cost_scaling_factor: 10.0
+    inflation_radius: 0.18
+    cost_scaling_factor: 40.0

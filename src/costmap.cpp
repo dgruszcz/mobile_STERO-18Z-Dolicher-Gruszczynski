@@ -9,14 +9,23 @@
 #include "stero_mobile_init/ElektronSrv.h"
 #include <nav_msgs/GetPlan.h>
 #include <nav_msgs/Path.h>
+#include <nav_msgs/Odometry.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/Quaternion.h>
+#include <math.h>
 #include <vector>
 
 base_local_planner::TrajectoryPlannerROS *localPlanner;
 global_planner::GlobalPlanner *globalPlanner;
 std::vector<geometry_msgs::PoseStamped> plan;
 ros::Publisher pub;
+geometry_msgs::Pose currentPosition = geometry_msgs::Pose();
+
+
+
+void do360(float rotSpeed=0.3, float frequency=20);
+float getRotZ(geometry_msgs::Quaternion);
 
 bool plan_and_execute(nav_msgs::GetPlan::Request  &req, nav_msgs::GetPlan::Response &res)
 {
@@ -27,19 +36,33 @@ bool plan_and_execute(nav_msgs::GetPlan::Request  &req, nav_msgs::GetPlan::Respo
   }
   ROS_INFO("Plan calculated successfully");
   res.plan.poses = plan;
-  // I teraz trzeba ogarnac lokalny planer
-  geometry_msgs::Twist vel;
+  geometry_msgs::Twist vel = geometry_msgs::Twist();
   localPlanner->setPlan(plan);
-  ros::Rate loop_rate(100);
-  while(!localPlanner->isGoalReached()){
-    localPlanner->computeVelocityCommands(vel);
+  ros::Rate loop_rate(20);
+  int counter = 0;
+  bool state;
+  while(!localPlanner->isGoalReached() && ros::ok()){
+    state = localPlanner->computeVelocityCommands(vel);
     pub.publish(vel);
-    if (vel.linear.x == 0 && vel.angular.z == 0)
-      return true;
+    if (!state){
+        counter++;
+        if (counter == 10){
+            ROS_INFO("Proba uwolnienia z zakleszczenia\n Wykonanie pelnego obrotu");
+            do360();
+            counter = 0;
+        }
+    } else {
+        counter = 0;
+    }
     ros::spinOnce();
     loop_rate.sleep();
   }
+  ROS_INFO("Cel osiagniety");
   return true;
+}
+
+void getCurrentPosition(nav_msgs::Odometry newPosition){
+    currentPosition = newPosition.pose.pose;
 }
 
 int main(int argc, char **argv)
@@ -48,6 +71,7 @@ int main(int argc, char **argv)
   ros::NodeHandle n;
   ros::ServiceServer service = n.advertiseService("/global_planner/planner/make_plan", plan_and_execute);
   pub = n.advertise<geometry_msgs::Twist>("mux_vel_nav/cmd_vel", 1000);
+  ros::Subscriber sub = n.subscribe("elektron/mobile_base_controller/odom", 1000, getCurrentPosition);
   tf2_ros::Buffer buffer(ros::Duration(10));
   tf2_ros::TransformListener tf(buffer);
   costmap_2d::Costmap2DROS local_costmap("local_costmap", buffer);
@@ -62,3 +86,45 @@ int main(int argc, char **argv)
   return 0;
 }
 
+
+float getRotZ(geometry_msgs::Quaternion q){
+    float siny_cosp;
+    float cosy_cosp;
+    float yaw;
+    siny_cosp = +2.0 * (q.w * q.z + q.x * q.y);
+    cosy_cosp = +1.0 - 2.0 * (q.y * q.y + q.z * q.z);
+    yaw = atan2(siny_cosp, cosy_cosp);
+    return yaw;
+}
+
+void do360(float rotSpeed, float frequency){
+    geometry_msgs::Twist twist = geometry_msgs::Twist();
+    twist.angular.z = rotSpeed;
+    float startingAngle;
+    startingAngle = getRotZ(currentPosition.orientation);
+
+    // Trzeba chwile poczekac, zeby robot mial szanse sie calkowicie obrocic, tzn by nastepna petla nie zatrzymala sie od razu
+    int iterationsToSkip = 10;
+
+    ros::Rate rate(frequency);  // Nadawanie ze stala czestotliwoscia
+
+    for (int i=0; i < iterationsToSkip; ++i){
+        pub.publish(twist);
+        rate.sleep();
+        ros::spinOnce();
+    }
+    float katRobota;
+    while (1){
+        twist.angular.z = rotSpeed;
+
+        // Pobieranie aktualnego obrotu robota i spradzenie czy osiagnal on zadany obrot (z zadana tolerancja)
+        katRobota = getRotZ(currentPosition.orientation);
+        if (fabs(startingAngle - katRobota) < 0.01)
+            break;
+        pub.publish(twist);
+        ros::spinOnce();
+        rate.sleep();
+    }
+    twist.angular.z = 0.0;
+    pub.publish(twist);
+}
