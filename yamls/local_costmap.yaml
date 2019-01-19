@@ -36,7 +36,8 @@ obstacles:  # Konfiguracja warstwy przeszkód
                                       # w miejscu w którym znajduje się robot nie mogą jednocześnie znajdować się przeszkody
 
 inflation:  # Konfiguracja warstwy nadmuchania
-    inflation_radius: 0.18  # Promień nadmuchania - dobrany tak, by robot mógł przejechać przez wąskie przejścia ale
+    inflation_radius: 0.3  # Promień nadmuchania - dobrany tak, by robot mógł przejechać przez wąskie przejścia ale
                             # jednocześnie by nie uderzał w ściany
-    cost_scaling_factor: 40.0  # Szybkość spadku kosztu - dobrany tak, by robot mógł przejechać przez wąskie przejścia ale
+    cost_scaling_factor: 30.0  # Szybkość spadku kosztu - dobrany tak, by robot mógł przejechać przez wąskie przejścia ale
                             # jednocześnie by nie uderzał w ściany
+
