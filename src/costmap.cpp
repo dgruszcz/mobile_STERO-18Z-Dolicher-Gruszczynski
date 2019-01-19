@@ -12,6 +12,7 @@
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Quaternion.h>
 #include <math.h>
 #include <vector>
@@ -21,9 +22,7 @@ global_planner::GlobalPlanner *globalPlanner;
 std::vector<geometry_msgs::PoseStamped> plan;
 ros::Publisher pub;
 geometry_msgs::Pose currentPosition = geometry_msgs::Pose();
- costmap_2d::Costmap2DROS *local_costmap;
-
-
+costmap_2d::Costmap2DROS *local_costmap;
 
 void do360(float rotSpeed=0.3, float frequency=20);
 float getRotZ(geometry_msgs::Quaternion);
