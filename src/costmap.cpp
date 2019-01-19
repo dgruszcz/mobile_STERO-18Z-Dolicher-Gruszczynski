@@ -38,7 +38,7 @@ bool plan_and_execute(nav_msgs::GetPlan::Request  &req, nav_msgs::GetPlan::Respo
   res.plan.poses = plan;
   geometry_msgs::Twist vel = geometry_msgs::Twist();
   localPlanner->setPlan(plan);
-  ros::Rate loop_rate(1000);
+  ros::Rate loop_rate(100);
   int counter = 0;
   bool state;
   while(!localPlanner->isGoalReached() && ros::ok()){
