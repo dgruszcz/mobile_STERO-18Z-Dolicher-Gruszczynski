@@ -1,16 +1,19 @@
-plugins: 
-    - {name: static_map,       type: "costmap_2d::StaticLayer"}
-    - {name: inflation,        type: "costmap_2d::InflationLayer"}
+plugins: # Definicje warstw (globalna mapa kosztów nie posiada warstwy przeszkód ponieważ nie są one aktualizowane)
+    - {name: static_map,       type: "costmap_2d::StaticLayer"}     # Warstwa statyczna mapy
+    - {name: inflation,        type: "costmap_2d::InflationLayer"}  # Warstwa nadmuchania przeszkód
 
-static_frame: true
-rolling_window: false
-update_frequency: 5.0
-publish_frequency: 1.0
+static_frame: true       # Korzystamy z gotowej mapy statycznej
+rolling_window: false    # Mapa nie będzie się poruszała, ponieważ jest to mapa statyczna
+update_frequency: 1.0    # Szybkość publikowania
+publish_frequency: 1.0   # Szybkość odświeżania, parametry te nie są konieczne lecz dla ułatwienia wyświetlania 
+                         # map w programie rviz zostawiliśmy je z bardzo niską wartością (mała częstotliwość)
 
-static_map:
-    lethal_cost_threshold: 100
+static_map:  # Konfiguracja mapy statycznej
+    lethal_cost_threshold: 100    # Próg kosztu od jakiego obszar będzie uznawany za przestrzeń kolizyjną
 
-inflation:
-    inflation_radius: 0.3
-    cost_scaling_factor: 80.0
+inflation:  # Konfiguracja warstwy nadmuchania
+    inflation_radius: 0.3      # Promień nadmuchania - dobrany tak, by planer mógl zaplanować trasę przez
+                               # odpowiednio wąskie przejścia 
+    cost_scaling_factor: 80.0  # Szybkość spadku kosztu - dobrana tak, by planer mógl zaplanować trasę przez
+                               # odpowiednio wąskie przejścia
 

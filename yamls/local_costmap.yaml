@@ -1,4 +1,4 @@
-plugins: # Definicje warstw (lokalny planer nie posiada warstwy statycznej)
+plugins: # Definicje warstw (lokalna mapa kosztóW nie posiada warstwy statycznej)
     - {name: obstacles,        type: "costmap_2d::VoxelLayer"}      # Warstwa przeszkód wykrywanych przez laser
     - {name: inflation,        type: "costmap_2d::InflationLayer"}  # Warstwa nadmuchania przeszkód
 
@@ -38,6 +38,6 @@ obstacles:  # Konfiguracja warstwy przeszkód
 inflation:  # Konfiguracja warstwy nadmuchania
     inflation_radius: 0.3  # Promień nadmuchania - dobrany tak, by robot mógł przejechać przez wąskie przejścia ale
                             # jednocześnie by nie uderzał w ściany
-    cost_scaling_factor: 30.0  # Szybkość spadku kosztu - dobrany tak, by robot mógł przejechać przez wąskie przejścia ale
+    cost_scaling_factor: 30.0  # Szybkość spadku kosztu - dobrana tak, by robot mógł przejechać przez wąskie przejścia ale
                             # jednocześnie by nie uderzał w ściany
 
